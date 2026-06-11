@@ -8,6 +8,9 @@ metadata:
   labels:
     component: ci
 spec:
+    securityContext:
+        runAsUser: 1000
+        fsGroup: 1000
   containers:
   - name: python
     image: python:3.7
