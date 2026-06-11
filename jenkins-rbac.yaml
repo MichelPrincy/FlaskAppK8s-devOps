@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: jenkins-admin-binding
+  namespace: jenkins-nouvelle-instance
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: jenkins-nouvelle-instance
+roleRef:
+  kind: ClusterRole
+  name: edit
+  apiGroup: rbac.authorization.k8s.io
