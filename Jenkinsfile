@@ -40,7 +40,11 @@ spec:
         pollSCM('H/2 * * * *')
     }
 
-    stage('Fix Permissions') {
+
+
+    stages {
+
+            stage('Fix Permissions') {
     steps {
         // On utilise un conteneur souvent root pour libérer le dossier
         container('docker') {
@@ -48,8 +52,6 @@ spec:
         }
     }
 }
-
-    stages {
         stage('Test python') {
             steps {
                 container('python') {
