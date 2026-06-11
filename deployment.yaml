@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: pythontest
-  namespace: tp3-jenkins # Ajout du namespace pour déployer au même endroit que Jenkins
+  namespace: jenkins-nouvelle-instance
   labels:
     app: pythontest
 spec:
