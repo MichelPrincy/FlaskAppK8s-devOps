@@ -8,6 +8,9 @@ metadata:
   labels:
     component: ci
 spec:
+    securityContext:
+        runAsUser: 0  
+        runAsGroup: 0
   containers:
   - name: python
     image: python:3.7
@@ -46,7 +49,6 @@ spec:
 
             stage('Fix Permissions') {
     steps {
-        // On utilise un conteneur souvent root pour libérer le dossier
         container('docker') {
             sh 'chmod -R 777 /home/jenkins/agent'
         }
