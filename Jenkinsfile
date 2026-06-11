@@ -8,18 +8,21 @@ metadata:
   labels:
     component: ci
 spec:
-    securityContext:
-        runAsUser: 0  
-        runAsGroup: 0
+  # Écrase les permissions au niveau du Pod pour tout exécuter en Root
+  securityContext:
+    runAsUser: 0
+    runAsGroup: 0
   containers:
   - name: python
     image: python:3.7
     command: ["cat"]
     tty: true
+    imagePullPolicy: IfNotPresent
   - name: docker
     image: docker:latest
     command: ["cat"]
     tty: true
+    imagePullPolicy: IfNotPresent
     env:
     - name: DOCKER_HOST
       value: tcp://localhost:2375
@@ -28,6 +31,7 @@ spec:
     command: ["dockerd-entrypoint.sh", "--insecure-registry", "host.docker.internal:4000"]
     securityContext:
       privileged: true
+    imagePullPolicy: IfNotPresent
     env:
     - name: DOCKER_TLS_CERTDIR
       value: ""
@@ -35,6 +39,7 @@ spec:
     image: bitnami/kubectl:latest
     command: ["cat"]
     tty: true
+    imagePullPolicy: IfNotPresent
 '''
         }
     }
@@ -43,21 +48,13 @@ spec:
         pollSCM('H/2 * * * *')
     }
 
-
-
     stages {
+        // Le stage 'Fix Permissions' a été supprimé car le securityContext gère tout à la racine.
 
-            stage('Fix Permissions') {
-    steps {
-        container('docker') {
-            sh 'chmod -R 777 /home/jenkins/agent'
-        }
-    }
-}
         stage('Test python') {
             steps {
                 container('python') {
-                    sh "pip install --user -r requirements.txt"
+                    sh "pip install -r requirements.txt"
                     sh "python test.py"
                 }
             }
