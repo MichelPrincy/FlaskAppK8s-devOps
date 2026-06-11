@@ -8,9 +8,6 @@ metadata:
   labels:
     component: ci
 spec:
-    securityContext:
-        runAsUser: 1000
-        fsGroup: 1000
   containers:
   - name: python
     image: python:3.7
@@ -42,6 +39,15 @@ spec:
     triggers {
         pollSCM('H/2 * * * *')
     }
+
+    stage('Fix Permissions') {
+    steps {
+        // On utilise un conteneur souvent root pour libérer le dossier
+        container('docker') {
+            sh 'chmod -R 777 /home/jenkins/agent'
+        }
+    }
+}
 
     stages {
         stage('Test python') {
